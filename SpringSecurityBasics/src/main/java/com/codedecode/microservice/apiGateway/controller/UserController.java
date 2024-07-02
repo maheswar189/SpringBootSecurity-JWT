@@ -12,13 +12,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codedecode.microservice.apiGateway.dto.AuthRequest;
+import com.codedecode.microservice.apiGateway.entity.Employee;
 import com.codedecode.microservice.apiGateway.entity.UserInfo;
 import com.codedecode.microservice.apiGateway.service.JwtService;
 import com.codedecode.microservice.apiGateway.service.UserService;
@@ -57,9 +61,57 @@ public class UserController {
 	@GetMapping("/welcome")
 	public String getName()
 	{
+		
 		return "Hellow world";
 	}
 	
+	@Operation(summary = "Getting the list of users")
+	@ApiResponse(description = "List of users.",responseCode = "200")
+	@GetMapping("/userList")
+	public List<UserInfo> getUserList()
+	{
+		List<UserInfo> userDetails = userService.getUserDetails();
+		return userDetails;
+	}
+	///EMPLOYEE caching APIS///////////////////////
+	
+	@GetMapping("/employeeList")
+	public List<Employee> getEmployeeList()
+	{
+		List<Employee> employeeList = userService.getEmployeeList();
+		return employeeList;
+	}
+	
+	@GetMapping("/employee/{empid}")
+	public Employee getEmployeeById(@PathVariable String empid)
+	{
+		Employee employee = userService.fetchEmployeeById(Integer.parseInt(empid));
+		return employee;
+	}
+	
+	@PostMapping("/employee")
+	public Employee saveEmployee(@RequestBody Employee emp)
+	{
+		 Employee saveEmployee = userService.saveEmployee(emp);
+		return saveEmployee;
+	}
+	@PutMapping("/employee")
+	public Employee updateEmployee(@RequestBody Employee emp)
+	{
+		 Employee saveEmployee = userService.updateEmployee(emp);
+		return saveEmployee;
+	}
+	
+	
+	
+	@DeleteMapping("/employee/{empid}")
+	public void deleteEmployeeById(@PathVariable String empid)
+	{
+		 userService.deleteEmployee(Integer.parseInt(empid));
+		
+	}
+	
+	///EMPLOYEE caching APIS///////////////////////
 	@Operation(summary = "This API returns the product list.")
 	@ApiResponse(description = "Successfully returned the product list.",responseCode = "200")
 	@GetMapping("/productList")
