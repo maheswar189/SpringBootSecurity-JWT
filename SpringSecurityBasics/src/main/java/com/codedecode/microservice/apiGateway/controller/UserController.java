@@ -70,6 +70,7 @@ public class UserController {
 	@GetMapping("/userList")
 	public List<UserInfo> getUserList()
 	{
+		System.out.println("User Details");
 		List<UserInfo> userDetails = userService.getUserDetails();
 		return userDetails;
 	}
